@@ -15,7 +15,7 @@ public class Tarea {
     @Column
     String descripcion;
     @Column
-    boolean estado;
+    boolean estado;//true=Completado . false = pendiente
     @Column
     String fechaCreacion;
 

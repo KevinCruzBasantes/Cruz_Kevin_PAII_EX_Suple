@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,13 +52,25 @@ public class TareaControler {
         List<Tarea> tareas = tareaServices.buscarEstado(estado);
         return ResponseEntity.ok(tareas);
     }
+    //Endpoint para actualizar el estado de la tarea
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Tarea> actualizarEstadoTarea(@PathVariable Long id, @RequestParam boolean estado) {
+        Tarea tareaActualizada = tareaServices.actualizarEstado(id, estado);
+        return tareaActualizada != null ? ResponseEntity.ok(tareaActualizada) : ResponseEntity.notFound().build();
+    }
 }
-//post
+//post para ser cargado con postman
 /*
 {
     "titulo": "Comprar leche",
     "descripcion": "Ir al supermercado para comprar leche",
     "estado": true,
+    "fechaCreacion": "2024-08-26T15:30:00"
+}
+{
+    "titulo": "Comprar pan",
+    "descripcion": "Ir al supermercado para comprar pan",
+    "estado": false,
     "fechaCreacion": "2024-08-26T15:30:00"
 }
 

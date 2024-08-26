@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TareaServices {
@@ -20,9 +21,10 @@ public class TareaServices {
     public Optional<Tarea>buscarID(long id){
         return tareaRepository.findById(id);
     }
-    public Tarea crear(Tarea tarea){
+    public Tarea crear(Tarea tarea) {
+        tarea.setId(0);
         tarea.setFechaCreacion(String.valueOf(LocalDateTime.now()));
-     return tareaRepository.save(tarea);
+        return tareaRepository.save(tarea);
     }
     public Tarea actualizar(Long id, Tarea tarea) {
         return tareaRepository.findById(id)
@@ -38,6 +40,16 @@ public class TareaServices {
     }
 
     public List<Tarea> buscarEstado(boolean estado) {
-        return tareaRepository.findByEstado(estado);
+        return tareaRepository.findAll().stream()
+                .filter(tarea -> tarea.isEstado() == estado)
+                .collect(Collectors.toList());
+    }
+    public Tarea actualizarEstado(Long id, boolean nuevoEstado) {
+        return tareaRepository.findById(id)
+                .map(tarea -> {
+                    tarea.setEstado(nuevoEstado);
+                    return tareaRepository.save(tarea);
+                })
+                .orElse(null);
     }
 }
